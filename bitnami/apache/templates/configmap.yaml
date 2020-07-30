@@ -7,3 +7,34 @@ metadata:
 data:
 {{ (.Files.Glob "files/httpd.conf").AsConfig | indent 2 }}
 {{ end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nri-flex-integrations
+  namespace: default
+data:
+  apache.yml: |
+    integrations:
+      - name: nri-flex
+        # interval: 30s
+        config:
+          name: apacheFlex # https://github.com/oliver006/redis_exporter
+          apis:
+            - event_type: apacheFlex
+              url: http://localhost:9117/metrics
+              prometheus:
+                # raw: true ### if enabled will create an event per prometheus metric retaining all metadata for the metric (same as unflatten)
+                ############### by default Flex will try to flatten the metrics where possible to reduce the events being generated
+                enable: true
+                # flattened_event: "redisSample"
+                ## override the flattened event type used, as the api name is "redis" the event type created will be redisSample
+                # histogram: true  ## default false - enable histogram metrics, as the api name is "redis" the event type created will be redisHistogramSample
+                # histogram_event: nginxMyCustomHistogramEvent ## override the auto event type for histogram metrics
+                # summary: true ## default false - enable summary metrics, as the api name is "redis" the event type created will be redisSummarySample
+                # summary_event: nginxMyCustomHistogramEvent ## override the auto event type for summary metrics
+                # go_metrics: false ## default false - the exporters internal go metrics
+                # unflatten: true ## (same as raw (will be removed later)) use with caution as it can generate a lot of events, this will generate an event per prometheus metric
+              # sample_filter:
+              # - .*: GAUGE ## remove all gauge metrics
+              # - .*: COUNTER ## remove all counter metrics

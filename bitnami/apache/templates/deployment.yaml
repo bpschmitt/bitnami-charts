@@ -139,6 +139,19 @@ spec:
           resources: {{- toYaml .Values.metrics.resources | nindent 12 }}
           {{- end }}
         {{- end }}
+        {{- if .Values.nrflex.enabled }}
+        - name: nri-flex
+          image: {{ template "apache.nrflex.image" . }}
+          imagePullPolicy: {{ .Values.nrflex.imagePullPolicy }}
+          volumeMounts:
+            - mountPath: /etc/newrelic-infra/integrations.d
+              name: nri-flex-volume
+          env:
+            - name: "NRIA_LICENSE_KEY"
+              value: {{ .Values.nrflex.new_relic_license_key }}
+            - name: "NRIA_IS_FORWARD_ONLY"
+              value: "true"
+        {{- end }}
       volumes:
         {{- if (include "apache.useHtdocs" .) }}
         - name: htdocs
@@ -154,3 +167,6 @@ spec:
           configMap:
             name: {{ include "apache.httpdConfConfigMap" . }}
         {{- end }}
+        - name: nri-flex-volume
+          configMap:
+            name: nri-flex-integrations

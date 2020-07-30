@@ -193,7 +193,7 @@ ingress:
 ## Prometheus Exporter / Metrics
 ##
 metrics:
-  enabled: false
+  enabled: true
   ## Bitnami Apache Prometheus Exporter image
   ## ref: https://hub.docker.com/r/bitnami/apache-exporter/tags/
   ##
@@ -212,7 +212,7 @@ metrics:
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
   ##
   podAnnotations:
-    prometheus.io/scrape: "true"
+    prometheus.io/scrape: "false"
     prometheus.io/port: "9117"
   ## Apache Prometheus exporter resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -229,7 +229,36 @@ metrics:
     #   cpu: 100m
     #   memory: 128Mi
 
-## Service paramaters
+nrflex:
+  enabled: true
+  new_relic_license_key: <NR LICENSE KEY HERE>
+  image:
+    registry: docker.io
+    repository: newrelic/infrastructure
+    tag: latest
+    ## Specify a imagePullPolicy
+    ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+    ##
+    pullPolicy: IfNotPresent
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ##
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+  resources:
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+
+## Service parameters
 ##
 service:
   ## Service type
