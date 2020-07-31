@@ -19,7 +19,7 @@ data:
       - name: nri-flex
         # interval: 30s
         config:
-          name: apacheFlex # https://github.com/oliver006/redis_exporter
+          name: apacheFlex
           apis:
             - event_type: apacheFlex
               url: http://localhost:9117/metrics
